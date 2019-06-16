@@ -1,0 +1,33 @@
+Lights.png
+size: 512, 128
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+BLUE
+  rotate: false
+  xy: 0, 0
+  size: 68, 99
+  orig: 68, 99
+  offset: 0, 0
+  index: -1
+GREEN
+  rotate: false
+  xy: 68, 0
+  size: 67, 103
+  orig: 67, 103
+  offset: 0, 0
+  index: -1
+PURPLE
+  rotate: false
+  xy: 135, 0
+  size: 70, 120
+  orig: 70, 120
+  offset: 0, 0
+  index: -1
+RED
+  rotate: false
+  xy: 205, 0
+  size: 62, 111
+  orig: 63, 112
+  offset: 1, 1
+  index: -1
