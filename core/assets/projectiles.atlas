@@ -1,0 +1,26 @@
+projectiles.png
+size: 256, 256
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+bluelight
+  rotate: false
+  xy: 134, 1
+  size: 68, 99
+  orig: 68, 99
+  offset: 0, 0
+  index: -1
+greenlight
+  rotate: false
+  xy: 65, 1
+  size: 67, 103
+  orig: 67, 103
+  offset: 0, 0
+  index: -1
+redlight
+  rotate: false
+  xy: 1, 1
+  size: 62, 111
+  orig: 63, 112
+  offset: 1, 1
+  index: -1
