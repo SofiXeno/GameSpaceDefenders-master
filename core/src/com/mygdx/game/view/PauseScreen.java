@@ -4,7 +4,10 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.Align;
 import com.mygdx.game.MyGame;
@@ -12,7 +15,8 @@ import com.mygdx.game.MyGame;
 import javax.swing.*;
 
 public class PauseScreen extends MyScreen{
-    private Label pauseLabel;
+ private   Sprite pause;
+ private Label pauseLabel;
     public PauseScreen( MyGame game){
         super(game);
     }
@@ -23,17 +27,22 @@ public class PauseScreen extends MyScreen{
         pauseLabel.scaleBy(0.3f);
         pauseLabel.setPosition(viewportWidth/2+pauseLabel.getWidth()/2, viewportHeight/2+pauseLabel.getWidth()/2);
         resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        Texture pauseTexture = new Texture(Gdx.files.internal("pauseLabel.png"));
+        pause = new Sprite( pauseTexture);
+        pause.setSize(20f, 12f);
+        pause.setPosition(0-pause.getWidth()/2, 0-pause.getHeight()/2);
 
     }
 
     @Override
     public void render(float delta) {
-        clearScreen();
+        //clearScreen();
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.P))
             game.changeScreen(MyGame.Screens.PLAY);
        game.getBatch().begin();
-        pauseLabel.draw(game.getBatch(), 0f);
+       // pauseLabel.draw(game.getBatch(), 0f);
+        pause.draw(game.getBatch());
         game.getBatch().end();
     }
 

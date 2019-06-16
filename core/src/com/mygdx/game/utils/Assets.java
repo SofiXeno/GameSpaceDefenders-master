@@ -13,6 +13,8 @@ public class Assets {
         manager = new AssetManager();
         manager.load("mainAtlas.atlas", TextureAtlas.class);
         manager.load("projectiles.atlas", TextureAtlas.class);
+        manager.load("AllShips.atlas", TextureAtlas.class);
+        manager.load("Lights.atlas", TextureAtlas.class);;
         manager.finishLoading();
     }
 

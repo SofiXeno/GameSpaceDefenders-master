@@ -3,10 +3,10 @@ package com.mygdx.game;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.mygdx.game.model.CharacterManager;
 import com.mygdx.game.utils.Assets;
 import com.mygdx.game.view.GameScreen;
 import com.mygdx.game.view.MenuScreen;
@@ -28,12 +28,16 @@ public class MyGame extends Game {
     private Screen menuScreen;
     private Screen pauseScreen;
     public Skin fontSkin;
+  public  CharacterManager m;
     @Override
     public void create() {
-//        fontSkin = new Skin(Gdx.files.internal("skin.json"));
+        fontSkin = new Skin(Gdx.files.internal("skin.json"));
         assets = new Assets();
          batch = new SpriteBatch();
-        gameScreen = new GameScreen( this);
+        gameScreen = new GameScreen( this, 1);
+       m = new CharacterManager();
+        m.setShips(assets.getManager().get("AllShips.atlas", TextureAtlas.class));
+        m.setProjectiles(assets.getManager().get("Lights.atlas", TextureAtlas.class));
         ((GameScreen) gameScreen).setShips(assets.getManager().get("mainAtlas.atlas", TextureAtlas.class));
         ((GameScreen) gameScreen).setProjs(assets.getManager().get("projectiles.atlas", TextureAtlas.class));
         ((GameScreen) gameScreen).initialize();

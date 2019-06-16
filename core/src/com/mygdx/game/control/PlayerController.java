@@ -37,14 +37,14 @@ public class PlayerController {
         shipSpeedX = downSpeed(shipSpeedX);
         shipSpeedY = downSpeed(shipSpeedY);
 
-        if (playerBounds.getX() + shipSpeedX * GameScreen.deltaCff > -GameScreen.viewportWidth / 2
-                && playerBounds.getX() + width + shipSpeedX * GameScreen.deltaCff < GameScreen.viewportWidth / 2)
-            posX += shipSpeedX * GameScreen.deltaCff;
+        if (playerBounds.getX() + shipSpeedX * Gdx.graphics.getDeltaTime() > -GameScreen.viewportWidth / 2
+                && playerBounds.getX() + width + shipSpeedX *  Gdx.graphics.getDeltaTime() < GameScreen.viewportWidth / 2)
+            posX += shipSpeedX *  Gdx.graphics.getDeltaTime();
 
-        if (playerBounds.getY() + shipSpeedY * GameScreen.deltaCff > -GameScreen.viewportHeight / 2
-                && playerBounds.getY() + height + shipSpeedY * GameScreen.deltaCff < GameScreen.viewportHeight / 2)
+        if (playerBounds.getY() + shipSpeedY *  Gdx.graphics.getDeltaTime() > -GameScreen.viewportHeight / 2
+                && playerBounds.getY() + height + shipSpeedY *  Gdx.graphics.getDeltaTime() < GameScreen.viewportHeight / 2)
 
-            posY += shipSpeedY * GameScreen.deltaCff;
+            posY += shipSpeedY *  Gdx.graphics.getDeltaTime();
         playerBounds.setPosition(posX,
                 posY);
 

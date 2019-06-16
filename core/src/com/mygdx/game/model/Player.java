@@ -1,19 +1,19 @@
 package com.mygdx.game.model;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.mygdx.game.control.PlayerController;
 import com.mygdx.game.view.GameScreen;
 
-public class Player extends Spaceship implements Runnable{
+public class Player extends Spaceship implements Runnable {
     private PlayerController controller;
-    private GameScreen screen;
-    public Player(TextureRegion texture, float x, float y, float width, float height, GameScreen screen) {
-        super(texture, x, y, width, height);
+
+    public Player(float x, float y, float width, float height, GameScreen screen, Ships type) {
+        super(screen.getCharManager().getSprite(type), x, y, width, height, screen);
         controller = new PlayerController(bounds, width, height);
         setWeapon(Weapon.getDefaultSingle());
-        this.screen = screen;
+        setType(type);
         player = true;
+        setDamage(15);
     }
 
     @Override
@@ -24,8 +24,12 @@ public class Player extends Spaceship implements Runnable{
 
     @Override
     public void run() {
-        screen.projectileFired(bounds.getX()+width/2, bounds.getY()+height, 10, 20f, true);
+        if (getWeapon().getType() == 2)
+            shoot(damage - 2, type);
+        else if (getWeapon().getType() == 3)
+            shoot(damage - 5, type);
+        else
+            shoot(damage, type);
+
     }
-
-
 }
