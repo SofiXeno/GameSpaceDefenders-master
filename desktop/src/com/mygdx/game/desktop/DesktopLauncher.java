@@ -16,7 +16,7 @@ public class DesktopLauncher {
 		config.title = "Space Defenders by Romanenko Mykhailo & Sofiia Xenofontova";
 		config.width = WIDTH;
 		config.height = HEIGHT;
-		config.resizable = false;
+		config.resizable = true;
 		MyGame mg = new MyGame();
 		new LwjglApplication(mg, config);
 	}
