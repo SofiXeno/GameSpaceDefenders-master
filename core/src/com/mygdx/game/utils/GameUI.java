@@ -8,12 +8,12 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
 
-public class UI {
+public class GameUI {
     private Stage gameStage;
     private Skin skin;
     private Label health, score;
 
-    public UI() {
+    public GameUI() {
         gameStage = new Stage(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
         skin = new Skin(Gdx.files.internal("skin.json"));
         health = new Label("Health: 100/100", skin.get("default", Label.LabelStyle.class));

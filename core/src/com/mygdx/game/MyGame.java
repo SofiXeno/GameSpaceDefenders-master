@@ -40,7 +40,6 @@ public class MyGame extends Game {
         m = new CharacterManager();
         m.setShips(assets.getManager().get("AllShips.atlas", TextureAtlas.class));
         m.setProjectiles(assets.getManager().get("Lights.atlas", TextureAtlas.class));
-
         ((GameScreen) gameScreen).initialize();
         menuScreen = new MenuScreen(this);
         pauseScreen = new PauseScreen(this);

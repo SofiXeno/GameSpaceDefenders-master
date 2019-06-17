@@ -2,10 +2,11 @@ package com.mygdx.game.view;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.mygdx.game.MyGame;
 import com.mygdx.game.model.*;
-import com.mygdx.game.utils.UI;
+import com.mygdx.game.utils.GameUI;
 
 import java.util.LinkedList;
 import java.util.Random;
@@ -15,12 +16,14 @@ import java.util.concurrent.TimeUnit;
 
 
 public class GameScreen extends MyScreen {
+    private Texture gameOver;
+    private int timeElapsed;
     private int score;
     private Random random;
     private float difficulty;
     private CharacterManager charManager;
     private Player player;
-    private UI ui;
+    private GameUI ui;
     private LinkedList<Projectile> projectiles;
     private LinkedList<Spaceship> spaceships;
     private ScheduledExecutorService ses;
@@ -46,7 +49,6 @@ public class GameScreen extends MyScreen {
                 difficulty = 0.6f;
                 break;
         }
-
     }
 
     public CharacterManager getCharManager() {
@@ -58,9 +60,10 @@ public class GameScreen extends MyScreen {
         charManager = game.m;
         projectiles = new LinkedList<Projectile>();
         spaceships = new LinkedList<Spaceship>();
-        ui = new UI();
-
+        ui = new GameUI();
+        timeElapsed = 0;
         random = new Random();
+        gameOver = new Texture(Gdx.files.internal("GameOverLabel.png"));
         s = new Spawner(120, this);
 
     }
@@ -68,7 +71,7 @@ public class GameScreen extends MyScreen {
     @Override
     public void show() {
         resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        if(player==null) {
+        if (player == null) {
             player = new Player(0f, 0f, 5f, 5f, this, Spaceship.Ships.PLAYER_RED);
             spaceships.add(player);
         }
@@ -81,12 +84,7 @@ public class GameScreen extends MyScreen {
         deltaCff = delta;
         game.getBatch().setProjectionMatrix(camera.combined);
         game.getBatch().begin();
-        if (game.getScreen() == this) {
-            drawEnemies(game.getBatch());
-            player.draw(game.getBatch());
-            s.spawn();
-            handleBattle(game.getBatch());
-        }
+        renderScreen();
         if (Gdx.input.isKeyJustPressed(Input.Keys.P)) {
             ses.shutdown();
             game.changeScreen(MyGame.Screens.PAUSE);
@@ -102,6 +100,30 @@ public class GameScreen extends MyScreen {
                 i--;
             } else
                 spaceships.get(i).draw(batch);
+        }
+    }
+
+    private void renderScreen() {
+        game.getBatch().draw(bg, -viewportWidth / 2, -viewportHeight / 2, viewportWidth, viewportHeight);
+        if (game.getScreen() == this) {
+            if (gameover) {
+                game.getBatch().draw(gameOver, -5f, -2.5f, 10f, 5f);
+                if (Gdx.input.isKeyJustPressed(Input.Keys.ANY_KEY)) {
+
+                }
+                return;
+            }
+            drawEnemies(game.getBatch());
+            player.draw(game.getBatch());
+            s.spawn();
+            handleBattle(game.getBatch());
+            timeElapsed++;
+            if (timeElapsed == 30 * 60 && difficulty - 0.1 >= 0.5) {
+                difficulty -= 0.1;
+                player.powerUp();
+                ui.updateHealth(player.getHealth());
+                timeElapsed = 0;
+            }
         }
     }
 
@@ -140,23 +162,23 @@ public class GameScreen extends MyScreen {
 
     public void projectileFired(float x, float y, int damage, float speed, boolean friendly, Spaceship.Ships type) {
         Projectile p;
-        if(!friendly)
-            speed/=difficulty;
+        if (!friendly)
+            speed /= difficulty;
         switch (type) {
             case PLAYER_RED:
-                p = new Projectile(charManager.getLaser(CharacterManager.Lasers.RED), x-1.5f/2, y, 1.5f, 3f, damage, speed, friendly);
+                p = new Projectile(charManager.getLaser(CharacterManager.Lasers.RED), x - 1.5f / 2, y, 1.5f, 3f, damage, speed, friendly);
                 break;
             case PLAYER_BLUE:
-                p = new Projectile(charManager.getLaser(CharacterManager.Lasers.BLUE), x-1.5f/2, y, 1.5f, 3f, damage, speed, friendly);
+                p = new Projectile(charManager.getLaser(CharacterManager.Lasers.BLUE), x - 1.5f / 2, y, 1.5f, 3f, damage, speed, friendly);
                 break;
             case PLAYER_GREEN:
-                p = new Projectile(charManager.getLaser(CharacterManager.Lasers.BLUE), x-1.5f/2, y, 1.5f, 3f, damage, speed, friendly);
+                p = new Projectile(charManager.getLaser(CharacterManager.Lasers.BLUE), x - 1.5f / 2, y, 1.5f, 3f, damage, speed, friendly);
                 break;
             case ENEMY4:
-                p = new Projectile(charManager.getLaser(CharacterManager.Lasers.PURPLE), x-2f/2, y, 2f, 4f, damage, speed, friendly);
+                p = new Projectile(charManager.getLaser(CharacterManager.Lasers.PURPLE), x - 2f / 2, y, 2f, 4f, damage, speed, friendly);
                 break;
             default:
-                p = new Projectile(charManager.getLaser(CharacterManager.Lasers.PURPLE), x-1.5f/2, y, 1.5f, 3f, damage, speed, friendly);
+                p = new Projectile(charManager.getLaser(CharacterManager.Lasers.PURPLE), x - 1.5f / 2, y, 1.5f, 3f, damage, speed, friendly);
 
         }
 
@@ -178,31 +200,29 @@ public class GameScreen extends MyScreen {
             }
             checkHits(p, batch);
         }
-
-
     }
 
     private void checkHits(Projectile p, SpriteBatch batch) {
         p.draw(batch);
         for (int i = 0; i < spaceships.size(); i++) {
-
             if (p.isFriendly() == spaceships.get(i).isPlayer())
                 continue;
             if (spaceships.get(i).getHitbox().contains(p.getBounds().getX() + p.getWidth() / 2, p.getBounds().getY() + p.getHeight() / 2)) {
-
+                projectiles.remove(p);
                 if (spaceships.get(i).processDamage(p.getDamage()) == 0) {
+
                     if (i != 0) {
                         score += ((Enemy) spaceships.get(i)).getPoints();
                         ui.updateScore(score);
                         spaceships.remove(i);
+                    } else {
+                        ui.updateHealth(player.getHealth());
+                        gameover = true;
+                        spaceships.remove(i);
                     }
-                    //  else{
-                    //DO SOMETHING
-                    //}
                     i--;
                 } else
                     ui.updateHealth(player.getHealth());
-                projectiles.remove(p);
             }
         }
     }

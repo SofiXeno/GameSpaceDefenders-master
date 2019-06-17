@@ -4,9 +4,11 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.mygdx.game.MyGame;
 
 public abstract class MyScreen implements Screen {
+    protected Texture bg;
     public static float viewportWidth;
     public static float viewportHeight;
     public static float halfHeight;
@@ -17,6 +19,7 @@ public abstract class MyScreen implements Screen {
     protected MyGame game;
 
     public MyScreen(MyGame game) {
+        bg = new Texture(Gdx.files.internal("Space.jpg"));
 
         this.game = game;
     }

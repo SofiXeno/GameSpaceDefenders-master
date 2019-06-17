@@ -34,14 +34,14 @@ public class Enemy extends Spaceship {
                 health = 80;
                 cooldown =(int) (300*screen.getDifficulty());
                 damage = 10;
-                points = 10;
+                points = 100;
                 break;
             case ENEMY2:
                 setWeapon(Weapon.getDefaultSingle());
                 health = 100;
                 cooldown = (int) (300*screen.getDifficulty());
                 damage = 15;
-                points = 20;
+                points = 200;
                 break;
             case ENEMY3:
                 setWeapon(new Weapon(600, Weapon.MINIGUN));
@@ -50,14 +50,14 @@ public class Enemy extends Spaceship {
                 damage = 5;
                 movementY--;
                 movementX*=3;
-                points = 15;
+                points = 150;
                 break;
             case ENEMY4:
                 setWeapon(new Weapon(100, Weapon.MINIGUN));
                 health = 150;
                 cooldown = (int) (400*screen.getDifficulty());
                 damage = 30;
-                points = 50;
+                points = 500;
                 break;
 
         }

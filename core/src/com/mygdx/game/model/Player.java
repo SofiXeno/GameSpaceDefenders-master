@@ -19,7 +19,11 @@ public class Player extends Spaceship implements Runnable {
         hitbox = new Polygon(new float[]{9*ratio, 67*ratio, 28*ratio, 126*ratio, 92*ratio, 156*ratio, 92*ratio, 226*ratio, 162*ratio, 226*ratio, 162*ratio, 156*ratio, 227*ratio, 126*ratio, 248*ratio, 67*ratio});
         controller = new PlayerController(bounds, width, height, hitbox, ratio);
     }
+    public void powerUp(){
+        health+=10;
+        damage+=3;
 
+    }
     @Override
     public void draw(SpriteBatch batch) {
         super.draw(batch);
