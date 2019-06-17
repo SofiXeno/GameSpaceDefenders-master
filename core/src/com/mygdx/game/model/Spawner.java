@@ -56,7 +56,7 @@ public class Spawner {
         currentTime++;
         if (currentTime == timeTillNextSpawn) {
             currentTime = 0;
-            timeTillNextSpawn = spawnRate+r.nextInt((int)(90*gs.getDifficulty()));
+            timeTillNextSpawn = spawnRate+r.nextInt((int)(60*gs.getDifficulty()));
             int rnd = r.nextInt((int) (MyScreen.viewportWidth / 2));
             if (r.nextBoolean())
                 rnd *= -1;

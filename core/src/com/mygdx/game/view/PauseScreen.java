@@ -32,12 +32,9 @@ public class PauseScreen extends MyScreen {
 
     @Override
     public void render(float delta) {
-        //clearScreen();
-
         if (Gdx.input.isKeyJustPressed(Input.Keys.P))
             game.changeScreen(MyGame.Screens.PLAY);
         game.getBatch().begin();
-        // pauseLabel.draw(game.getBatch(), 0f);
         pause.draw(game.getBatch());
         game.getBatch().end();
     }

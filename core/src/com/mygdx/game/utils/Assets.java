@@ -11,6 +11,9 @@ public class Assets {
         manager = new AssetManager();
         manager.load("AllShips.atlas", TextureAtlas.class);
         manager.load("Lights.atlas", TextureAtlas.class);
+        manager.load("AllLabels.atlas", TextureAtlas.class);
+        manager.load("AllProtagonistShips.atlas", TextureAtlas.class);
+
         manager.finishLoading();
     }
 

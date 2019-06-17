@@ -43,10 +43,10 @@ public class Spaceship extends GameObject {
     }
 
     public int processDamage(int dmg) {
-        if (health > dmg) {
             health -= dmg;
-            return 1;
-        } else return 0;
+            if(health<=0)
+                return 0;
+            else return 1;
     }
 
     public boolean isPlayer() {

@@ -29,9 +29,11 @@ public class GameScreen extends MyScreen {
     private ScheduledExecutorService ses;
     private Spawner s;
     private boolean gameover;
+    private Spaceship.Ships playerSkin;
 
-    public GameScreen(MyGame game, MyGame.Difficulties diff) {
+    public GameScreen(MyGame game, MyGame.Difficulties diff, Spaceship.Ships ship) {
         super(game);
+        playerSkin = ship;
         switch (diff) {
             case VERY_EASY:
                 difficulty = 1.2f;
@@ -65,14 +67,13 @@ public class GameScreen extends MyScreen {
         random = new Random();
         gameOver = new Texture(Gdx.files.internal("GameOverLabel.png"));
         s = new Spawner(120, this);
-
     }
 
     @Override
     public void show() {
         resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         if (player == null) {
-            player = new Player(0f, 0f, 5f, 5f, this, Spaceship.Ships.PLAYER_RED);
+            player = new Player(0f, 0f, 5f, 5f, this, playerSkin);
             spaceships.add(player);
         }
         beginAutoshoot();
@@ -109,7 +110,12 @@ public class GameScreen extends MyScreen {
             if (gameover) {
                 game.getBatch().draw(gameOver, -5f, -2.5f, 10f, 5f);
                 if (Gdx.input.isKeyJustPressed(Input.Keys.ANY_KEY)) {
-
+                    try {
+                        MenuScreen.setHS(score);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    game.newMenu();
                 }
                 return;
             }
@@ -172,16 +178,14 @@ public class GameScreen extends MyScreen {
                 p = new Projectile(charManager.getLaser(CharacterManager.Lasers.BLUE), x - 1.5f / 2, y, 1.5f, 3f, damage, speed, friendly);
                 break;
             case PLAYER_GREEN:
-                p = new Projectile(charManager.getLaser(CharacterManager.Lasers.BLUE), x - 1.5f / 2, y, 1.5f, 3f, damage, speed, friendly);
+                p = new Projectile(charManager.getLaser(CharacterManager.Lasers.GREEN), x - 1.5f / 2, y, 1.5f, 3f, damage, speed, friendly);
                 break;
             case ENEMY4:
                 p = new Projectile(charManager.getLaser(CharacterManager.Lasers.PURPLE), x - 2f / 2, y, 2f, 4f, damage, speed, friendly);
                 break;
             default:
                 p = new Projectile(charManager.getLaser(CharacterManager.Lasers.PURPLE), x - 1.5f / 2, y, 1.5f, 3f, damage, speed, friendly);
-
         }
-
         projectiles.add(p);
     }
 
@@ -210,7 +214,6 @@ public class GameScreen extends MyScreen {
             if (spaceships.get(i).getHitbox().contains(p.getBounds().getX() + p.getWidth() / 2, p.getBounds().getY() + p.getHeight() / 2)) {
                 projectiles.remove(p);
                 if (spaceships.get(i).processDamage(p.getDamage()) == 0) {
-
                     if (i != 0) {
                         score += ((Enemy) spaceships.get(i)).getPoints();
                         ui.updateScore(score);

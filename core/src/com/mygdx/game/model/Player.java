@@ -16,8 +16,8 @@ public class Player extends Spaceship implements Runnable {
         player = true;
         setDamage(15);
         float ratio = width/256;
-        hitbox = new Polygon(new float[]{9*ratio, 67*ratio, 28*ratio, 126*ratio, 92*ratio, 156*ratio, 92*ratio, 226*ratio, 162*ratio, 226*ratio, 162*ratio, 156*ratio, 227*ratio, 126*ratio, 248*ratio, 67*ratio});
-        controller = new PlayerController(bounds, width, height, hitbox, ratio);
+        hitbox = new Polygon(new float[]{0, 0, 9*ratio, 67*ratio, 28*ratio, 126*ratio, 92*ratio, 156*ratio, 92*ratio, 226*ratio, 162*ratio, 226*ratio, 162*ratio, 156*ratio, 227*ratio, 126*ratio, 248*ratio, 67*ratio, 0, 256*ratio});
+        controller = new PlayerController(bounds, width, height, hitbox);
     }
     public void powerUp(){
         health+=10;
