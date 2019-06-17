@@ -1,42 +1,41 @@
 package com.mygdx.game.model;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Polygon;
 import com.mygdx.game.view.GameScreen;
 
 public class Spaceship extends GameObject {
     protected Ships type;
-
-    public void setType(Ships type) {
-        this.type = type;
-    }
-
     protected GameScreen screen;
     protected int damage;
     protected boolean player;
-    private int health;
+    protected int health;
     private Weapon weapon;
+
     public Spaceship(TextureRegion texture, float x, float y, float width, float height, GameScreen screen) {
         super(texture, x, y, width, height);
         health = 100;
         this.screen = screen;
     }
-    public void shoot(int damage, Ships type){
+
+    public void setType(Ships type) {
+        this.type = type;
+    }
+
+    public void shoot(int damage, Ships type) {
         int vector = 1;
         float y = bounds.getY();
-        if(!player)
+        if (!player)
             vector *= -1;
         else
-            y+=getHeight();
-        if(getWeapon().getType()==Weapon.SINGLE)
-            screen.projectileFired(bounds.getX() + width / 2, y, damage, 20f*vector, player, type);
-        else if(getWeapon().getType()==Weapon.DOUBLE){
-            screen.projectileFired(bounds.getX() + width / 4, y, damage, 20f*vector, player, type);
-            screen.projectileFired(bounds.getX() + (width / 4)*3, y, damage, 20f*vector, player, type);
-        }
-        else if(getWeapon().getType()==Weapon.MINIGUN)
-            screen.projectileFired(bounds.getX() + width / 2, y, damage, 30f*vector, player, type);
+            y += getHeight();
+        if (getWeapon().getType() == Weapon.SINGLE)
+            screen.projectileFired(bounds.getX() + width / 2, y, damage, 20f * vector, player, type);
+        else if (getWeapon().getType() == Weapon.DOUBLE) {
+            screen.projectileFired(bounds.getX() + width / 4, y, damage, 20f * vector, player, type);
+            screen.projectileFired(bounds.getX() + (width / 4) * 3, y, damage, 20f * vector, player, type);
+        } else if (getWeapon().getType() == Weapon.MINIGUN)
+            screen.projectileFired(bounds.getX() + width / 2, y, damage, 50f * vector, player, type);
     }
 
     public void setDamage(int damage) {

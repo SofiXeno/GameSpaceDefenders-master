@@ -3,7 +3,6 @@ package com.mygdx.game.view;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.mygdx.game.MyGame;
 import com.mygdx.game.model.*;
 import com.mygdx.game.utils.UI;
@@ -18,66 +17,77 @@ import java.util.concurrent.TimeUnit;
 public class GameScreen extends MyScreen {
     private int score;
     private Random random;
-    private double difficulty;
+    private float difficulty;
     private CharacterManager charManager;
-    private TextureAtlas ships;
-
-    public CharacterManager getCharManager() {
-        return charManager;
-    }
-
-    private TextureAtlas projs;
     private Player player;
     private UI ui;
     private LinkedList<Projectile> projectiles;
     private LinkedList<Spaceship> spaceships;
     private ScheduledExecutorService ses;
     private Spawner s;
+    private boolean gameover;
 
-    public GameScreen(MyGame game, double difficulty) {
+    public GameScreen(MyGame game, MyGame.Difficulties diff) {
         super(game);
-        this.difficulty = difficulty;
+        switch (diff) {
+            case VERY_EASY:
+                difficulty = 1.2f;
+                break;
+            case EASY:
+                difficulty = 1.1f;
+                break;
+            case MEDIUM:
+                difficulty = 1f;
+                break;
+            case HARD:
+                difficulty = 0.8f;
+                break;
+            case VERY_HARD:
+                difficulty = 0.6f;
+                break;
+        }
 
     }
 
+    public CharacterManager getCharManager() {
+        return charManager;
+    }
+
     public void initialize() {
+        gameover = false;
         charManager = game.m;
-        player = new Player( 0f, 0f, 5f, 5f, this, Spaceship.Ships.PLAYER_RED);
         projectiles = new LinkedList<Projectile>();
         spaceships = new LinkedList<Spaceship>();
-        spaceships.add(player);
         ui = new UI();
 
         random = new Random();
-        s = new Spawner(2000, this);
+        s = new Spawner(120, this);
 
     }
 
     @Override
     public void show() {
-
         resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        if(!s.isAlive())
-            s.start();
-        s.setActive(true);
+        if(player==null) {
+            player = new Player(0f, 0f, 5f, 5f, this, Spaceship.Ships.PLAYER_RED);
+            spaceships.add(player);
+        }
         beginAutoshoot();
-        addEnemy(2, 1);
     }
 
     @Override
     public void render(float delta) {
         clearScreen();
-
         deltaCff = delta;
         game.getBatch().setProjectionMatrix(camera.combined);
         game.getBatch().begin();
         if (game.getScreen() == this) {
             drawEnemies(game.getBatch());
             player.draw(game.getBatch());
+            s.spawn();
             handleBattle(game.getBatch());
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.P)) {
-            s.setActive(false);
             ses.shutdown();
             game.changeScreen(MyGame.Screens.PAUSE);
         }
@@ -86,12 +96,12 @@ public class GameScreen extends MyScreen {
     }
 
     private void drawEnemies(SpriteBatch batch) {
-        for(int i = 1; i<spaceships.size(); i++){
-            if(spaceships.get(i).getBounds().getY()+spaceships.get(i).getHeight()<-viewportHeight/2) {
+        for (int i = 1; i < spaceships.size(); i++) {
+            if (spaceships.get(i).getBounds().getY() + spaceships.get(i).getHeight() < -viewportHeight / 2) {
                 spaceships.remove(i);
                 i--;
-            }else
-            spaceships.get(i).draw(batch);
+            } else
+                spaceships.get(i).draw(batch);
         }
     }
 
@@ -110,44 +120,51 @@ public class GameScreen extends MyScreen {
     }
 
     public void addEnemy(int xPos, int type) {
-        if(xPos+6.1f>viewportWidth/2)
-            xPos +=(viewportWidth/2-xPos-6.1f);
+        if (xPos + 6.1f > viewportWidth / 2)
+            xPos += (viewportWidth / 2 - xPos - 6.1f);
         switch (type) {
             case 0:
-                spaceships.add(new Enemy(Spaceship.Ships.ENEMY1, xPos, viewportWidth/2, 5f, 5f*2.06f, this));
+                spaceships.add(new Enemy(Spaceship.Ships.ENEMY1, xPos, viewportWidth / 2, 5f, 5f * 2.06f, this));
                 break;
             case 1:
-                spaceships.add(new Enemy(Spaceship.Ships.ENEMY2, xPos, viewportWidth/2, 5f, 5f*1.9f, this));
+                spaceships.add(new Enemy(Spaceship.Ships.ENEMY2, xPos, viewportWidth / 2, 5f, 5f * 1.9f, this));
                 break;
             case 2:
-                spaceships.add(new Enemy(Spaceship.Ships.ENEMY3, xPos, viewportWidth/2, 4f, 4f*1.75f, this));
+                spaceships.add(new Enemy(Spaceship.Ships.ENEMY3, xPos, viewportWidth / 2, 4f, 4f * 1.75f, this));
                 break;
             case 3:
-                spaceships.add(new Enemy(Spaceship.Ships.ENEMY4, xPos, viewportWidth/2, 6f, 6f*2.52f, this));
+                spaceships.add(new Enemy(Spaceship.Ships.ENEMY4, xPos, viewportWidth / 2, 6f, 6f * 2.52f, this));
                 break;
         }
     }
 
     public void projectileFired(float x, float y, int damage, float speed, boolean friendly, Spaceship.Ships type) {
         Projectile p;
-        switch(type){
+        if(!friendly)
+            speed/=difficulty;
+        switch (type) {
             case PLAYER_RED:
-                 p = new Projectile(charManager.getLaser(CharacterManager.Lasers.RED), x, y, 1.5f, 3f, damage, speed, friendly);
+                p = new Projectile(charManager.getLaser(CharacterManager.Lasers.RED), x-1.5f/2, y, 1.5f, 3f, damage, speed, friendly);
                 break;
             case PLAYER_BLUE:
-                p = new Projectile(charManager.getLaser(CharacterManager.Lasers.BLUE), x, y, 1.5f, 3f, damage, speed, friendly);
+                p = new Projectile(charManager.getLaser(CharacterManager.Lasers.BLUE), x-1.5f/2, y, 1.5f, 3f, damage, speed, friendly);
                 break;
             case PLAYER_GREEN:
-                p = new Projectile(charManager.getLaser(CharacterManager.Lasers.BLUE), x, y, 1.5f, 3f, damage, speed, friendly);
+                p = new Projectile(charManager.getLaser(CharacterManager.Lasers.BLUE), x-1.5f/2, y, 1.5f, 3f, damage, speed, friendly);
                 break;
             case ENEMY4:
-                p = new Projectile(charManager.getLaser(CharacterManager.Lasers.PURPLE), x, y, 2f, 4f, damage, speed, friendly);
+                p = new Projectile(charManager.getLaser(CharacterManager.Lasers.PURPLE), x-2f/2, y, 2f, 4f, damage, speed, friendly);
                 break;
-                default:
-                    p = new Projectile(charManager.getLaser(CharacterManager.Lasers.PURPLE), x, y, 1.5f, 3f, damage, speed, friendly);
+            default:
+                p = new Projectile(charManager.getLaser(CharacterManager.Lasers.PURPLE), x-1.5f/2, y, 1.5f, 3f, damage, speed, friendly);
 
         }
+
         projectiles.add(p);
+    }
+
+    public float getDifficulty() {
+        return difficulty;
     }
 
     private void handleBattle(SpriteBatch batch) {
@@ -157,6 +174,7 @@ public class GameScreen extends MyScreen {
             if (p.getBounds().getY() > halfHeight || p.getBounds().getY() + p.getHeight() < -halfHeight) {
                 projectiles.remove(i);
                 i--;
+                continue;
             }
             checkHits(p, batch);
         }
@@ -174,14 +192,15 @@ public class GameScreen extends MyScreen {
 
                 if (spaceships.get(i).processDamage(p.getDamage()) == 0) {
                     if (i != 0) {
-                        score+=((Enemy)spaceships.get(i)).getPoints();
-                                spaceships.remove(i);
+                        score += ((Enemy) spaceships.get(i)).getPoints();
+                        ui.updateScore(score);
+                        spaceships.remove(i);
                     }
                     //  else{
                     //DO SOMETHING
                     //}
                     i--;
-                }else
+                } else
                     ui.updateHealth(player.getHealth());
                 projectiles.remove(p);
             }
@@ -193,11 +212,4 @@ public class GameScreen extends MyScreen {
         ses.scheduleAtFixedRate(player, 500, player.getWeapon().getCooldownTime(), TimeUnit.MILLISECONDS);
     }
 
-    public void setShips(TextureAtlas textureAtlas) {
-        this.ships = textureAtlas;
-    }
-
-    public void setProjs(TextureAtlas textureAtlas) {
-        this.projs = textureAtlas;
-    }
 }

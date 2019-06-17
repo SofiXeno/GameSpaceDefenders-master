@@ -11,11 +11,14 @@ public class PlayerController {
     private float shipSpeedX, shipSpeedY;
     private float width, height;
     private Polygon playerBounds;
-
-    public PlayerController(Polygon carBounds, float width, float height) {
+    private Polygon hitbox;
+    private float ratio;
+    public PlayerController(Polygon carBounds, float width, float height, Polygon hitbox, float ratio) {
         this.playerBounds = carBounds;
         this.width = width;
         this.height = height;
+        this.hitbox = hitbox;
+        this.ratio = ratio;
     }
 
 
@@ -38,15 +41,16 @@ public class PlayerController {
         shipSpeedY = downSpeed(shipSpeedY);
 
         if (playerBounds.getX() + shipSpeedX * Gdx.graphics.getDeltaTime() > -GameScreen.viewportWidth / 2
-                && playerBounds.getX() + width + shipSpeedX *  Gdx.graphics.getDeltaTime() < GameScreen.viewportWidth / 2)
-            posX += shipSpeedX *  Gdx.graphics.getDeltaTime();
+                && playerBounds.getX() + width + shipSpeedX * Gdx.graphics.getDeltaTime() < GameScreen.viewportWidth / 2)
+            posX += shipSpeedX * Gdx.graphics.getDeltaTime();
 
-        if (playerBounds.getY() + shipSpeedY *  Gdx.graphics.getDeltaTime() > -GameScreen.viewportHeight / 2
-                && playerBounds.getY() + height + shipSpeedY *  Gdx.graphics.getDeltaTime() < GameScreen.viewportHeight / 2)
+        if (playerBounds.getY() + shipSpeedY * Gdx.graphics.getDeltaTime() > -GameScreen.viewportHeight / 2
+                && playerBounds.getY() + height + shipSpeedY * Gdx.graphics.getDeltaTime() < GameScreen.viewportHeight / 2)
 
-            posY += shipSpeedY *  Gdx.graphics.getDeltaTime();
+            posY += shipSpeedY * Gdx.graphics.getDeltaTime();
         playerBounds.setPosition(posX,
                 posY);
+        hitbox.setPosition(posX+9*ratio, posY+67*ratio);
 
     }
 

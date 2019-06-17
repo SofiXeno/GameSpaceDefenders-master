@@ -16,11 +16,11 @@ public class Weapon {
         return new Weapon(300, Weapon.SINGLE);
     }
 
-    public static Weapon getDefaultDouble(){
+    public static Weapon getDefaultDouble() {
         return new Weapon(400, Weapon.DOUBLE);
     }
 
-    public static Weapon getDefaultMinigun(){
+    public static Weapon getDefaultMinigun() {
         return new Weapon(100, Weapon.MINIGUN);
     }
 

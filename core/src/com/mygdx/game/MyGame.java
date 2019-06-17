@@ -13,40 +13,42 @@ import com.mygdx.game.view.MenuScreen;
 import com.mygdx.game.view.PauseScreen;
 
 public class MyGame extends Game {
-    public SpriteBatch getBatch() {
-        return batch;
-    }
-
-    public enum Screens{
-        PLAY,
-        PAUSE,
-        MENU
-    }
+    public Skin fontSkin;
+    public CharacterManager m;
     private SpriteBatch batch;
     private Screen gameScreen;
     private Assets assets;
     private Screen menuScreen;
     private Screen pauseScreen;
-    public Skin fontSkin;
-  public  CharacterManager m;
+
+    public SpriteBatch getBatch() {
+        return batch;
+    }
+    public enum Difficulties{
+        VERY_EASY,
+        EASY,
+        MEDIUM,
+        HARD,
+        VERY_HARD
+    }
     @Override
     public void create() {
         fontSkin = new Skin(Gdx.files.internal("skin.json"));
         assets = new Assets();
-         batch = new SpriteBatch();
-        gameScreen = new GameScreen( this, 1);
-       m = new CharacterManager();
+        batch = new SpriteBatch();
+        gameScreen = new GameScreen(this, Difficulties.VERY_HARD);
+        m = new CharacterManager();
         m.setShips(assets.getManager().get("AllShips.atlas", TextureAtlas.class));
         m.setProjectiles(assets.getManager().get("Lights.atlas", TextureAtlas.class));
-        ((GameScreen) gameScreen).setShips(assets.getManager().get("mainAtlas.atlas", TextureAtlas.class));
-        ((GameScreen) gameScreen).setProjs(assets.getManager().get("projectiles.atlas", TextureAtlas.class));
+
         ((GameScreen) gameScreen).initialize();
-        menuScreen = new MenuScreen( this);
-        pauseScreen = new PauseScreen( this);
+        menuScreen = new MenuScreen(this);
+        pauseScreen = new PauseScreen(this);
         setScreen(gameScreen);
     }
-    public void changeScreen(Screens value){
-        switch(value ){
+
+    public void changeScreen(Screens value) {
+        switch (value) {
             case PLAY:
                 setScreen(gameScreen);
                 break;
@@ -57,10 +59,17 @@ public class MyGame extends Game {
                 setScreen(pauseScreen);
         }
     }
+
     @Override
     public void dispose() {
         super.dispose();
         gameScreen.dispose();
         assets.dispose();
+    }
+
+    public enum Screens {
+        PLAY,
+        PAUSE,
+        MENU
     }
 }

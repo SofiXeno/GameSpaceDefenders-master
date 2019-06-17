@@ -6,12 +6,7 @@ import com.mygdx.game.view.GameScreen;
 import com.mygdx.game.view.MyScreen;
 
 public class Enemy extends Spaceship {
-    private int movementX, movementY;
-
-    public int getPoints() {
-        return points;
-    }
-
+    private float movementX, movementY;
     private int points;
     private int cooldown;
     private int preparation;
@@ -21,47 +16,55 @@ public class Enemy extends Spaceship {
         player = false;
         preparation = 0;
         determineEnemy(ship);
-        movementY = -(screen.getRandom().nextInt(3)+1);
+        movementY = -(screen.getRandom().nextInt(3) + 1);
         movementX = screen.getRandom().nextInt(4);
-        if(screen.getRandom().nextBoolean())
-            movementX*=-1;
+        if (screen.getRandom().nextBoolean())
+            movementX *= -1;
         setType(ship);
     }
 
+    public int getPoints() {
+        return points;
+    }
 
     private void determineEnemy(Ships ship) {
-        switch (ship){
+        switch (ship) {
             case ENEMY1:
                 setWeapon(new Weapon(600, Weapon.DOUBLE));
-                cooldown  = 300;
+                health = 80;
+                cooldown =(int) (300*screen.getDifficulty());
                 damage = 10;
                 points = 10;
                 break;
             case ENEMY2:
                 setWeapon(Weapon.getDefaultSingle());
-                cooldown = 200;
+                health = 100;
+                cooldown = (int) (300*screen.getDifficulty());
                 damage = 15;
                 points = 20;
                 break;
             case ENEMY3:
                 setWeapon(new Weapon(600, Weapon.MINIGUN));
-                cooldown = 100;
+                health = 60;
+                cooldown = (int) (200*screen.getDifficulty());
                 damage = 5;
                 movementY--;
-                if(movementX>=0)
-                movementX+=2;
-                else
-                    movementY-=2;
+                movementX*=3;
                 points = 15;
                 break;
             case ENEMY4:
                 setWeapon(new Weapon(100, Weapon.MINIGUN));
-                cooldown = 150;
+                health = 150;
+                cooldown = (int) (400*screen.getDifficulty());
                 damage = 30;
                 points = 50;
                 break;
 
         }
+        movementX/=screen.getDifficulty();
+        movementY/=screen.getDifficulty();
+
+
     }
 
     @Override
@@ -71,15 +74,15 @@ public class Enemy extends Spaceship {
         preparation++;
         if (preparation == cooldown) {
             shoot(damage, type);
-            preparation = screen.getRandom().nextInt(cooldown+1) + 1;
+            preparation = screen.getRandom().nextInt(cooldown + 1) + 1;
         }
     }
 
     private void move() {
-        if(bounds.getX()+movementX* Gdx.graphics.getDeltaTime()> -MyScreen.viewportWidth/2 &&bounds.getX()+getWidth()+movementX* Gdx.graphics.getDeltaTime()<MyScreen.viewportWidth/2)
-            bounds.setPosition(bounds.getX()+movementX*Gdx.graphics.getDeltaTime(), bounds.getY()+movementY*Gdx.graphics.getDeltaTime());
+        if (bounds.getX() + movementX * Gdx.graphics.getDeltaTime() > -MyScreen.viewportWidth / 2 && bounds.getX() + getWidth() + movementX * Gdx.graphics.getDeltaTime() < MyScreen.viewportWidth / 2)
+            bounds.setPosition(bounds.getX() + movementX * Gdx.graphics.getDeltaTime(), bounds.getY() + movementY * Gdx.graphics.getDeltaTime());
         else
-            movementX*=-1;
+            movementX *= -1;
     }
 
 }

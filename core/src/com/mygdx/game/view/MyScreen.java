@@ -4,27 +4,29 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.mygdx.game.MyGame;
 
 public abstract class MyScreen implements Screen {
-   // protected SpriteBatch batch;
-    protected OrthographicCamera camera;
-    protected MyGame game;
     public static float viewportWidth;
     public static float viewportHeight;
     public static float halfHeight;
     public static float halfWidth;
     public static float deltaCff;
-    protected void clearScreen(){
+    // protected SpriteBatch batch;
+    protected OrthographicCamera camera;
+    protected MyGame game;
+
+    public MyScreen(MyGame game) {
+
+        this.game = game;
+    }
+
+    protected void clearScreen() {
         Gdx.gl.glClearColor(0, 0, 0.1f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
     }
-    public MyScreen( MyGame game){
 
-        this.game = game;
-    }
     @Override
     public void resize(int width, int height) {
         float aspectRatio = (float) height / width;
@@ -34,6 +36,7 @@ public abstract class MyScreen implements Screen {
         halfWidth = viewportWidth / 2;
         camera = new OrthographicCamera(viewportWidth, viewportHeight);
     }
+
     @Override
     public void pause() {
 
