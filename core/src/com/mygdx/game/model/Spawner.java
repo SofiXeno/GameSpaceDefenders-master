@@ -19,7 +19,7 @@ public class Spawner {
         this.gs = gs;
         active = true;
         currentTime = 0;
-        timeTillNextSpawn = spawnRate+r.nextInt((int)(90*gs.getDifficulty()));
+        timeTillNextSpawn = spawnRate+r.nextInt((int)(60*gs.getDifficulty()));
     }
 
 
