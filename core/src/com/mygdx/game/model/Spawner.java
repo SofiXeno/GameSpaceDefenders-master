@@ -19,7 +19,7 @@ public class Spawner {
         this.gs = gs;
         active = true;
         currentTime = 0;
-        timeTillNextSpawn = spawnRate+r.nextInt((int)(60*gs.getDifficulty()));
+        timeTillNextSpawn = 1;
     }
 
 
@@ -56,12 +56,13 @@ public class Spawner {
         currentTime++;
         if (currentTime == timeTillNextSpawn) {
             currentTime = 0;
-            timeTillNextSpawn = spawnRate+r.nextInt((int)(60*gs.getDifficulty()));
+            timeTillNextSpawn = (int)(spawnRate*gs.getDifficulty())+r.nextInt((int)(60*gs.getDifficulty()));
             int rnd = r.nextInt((int) (MyScreen.viewportWidth / 2));
             if (r.nextBoolean())
                 rnd *= -1;
             gs.addEnemy(rnd, randomiseSpawn(r.nextInt(1000)));
         }
+
     }
     }
 

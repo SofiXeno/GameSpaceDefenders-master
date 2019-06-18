@@ -50,9 +50,9 @@ public class MenuScreen extends MyScreen {
         logo = new TextureRegion(textures.findRegion("Label_space_defenders"));
         selectDiff =  new TextureRegion(textures.findRegion("difficulty"));
 
-        red = new Button(chars.findRegion("red"), chars.findRegion("redG"), 0-5f, -9f, 3f, 3f, Spaceship.Ships.PLAYER_RED);
+        red = new Button(chars.findRegion("red"), chars.findRegion("redG"),0+2f , -9f, 3f, 3f, Spaceship.Ships.PLAYER_RED);
         blue= new Button(chars.findRegion("blue"), chars.findRegion("blueG"), 0-1.5f, -9f, 3f, 3f, Spaceship.Ships.PLAYER_BLUE);
-       green = new Button(chars.findRegion("green"), chars.findRegion("greenG"), 0+2f, -9f, 3f, 3f, Spaceship.Ships.PLAYER_GREEN);
+       green = new Button(chars.findRegion("green"), chars.findRegion("greenG"),0-5f , -9f, 3f, 3f, Spaceship.Ships.PLAYER_GREEN);
         ships = new Button[]{red, green, blue};
         stage = new Stage();
         Skin s = new Skin(Gdx.files.internal("skin.json"));

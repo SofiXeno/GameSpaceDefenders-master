@@ -66,7 +66,7 @@ public class GameScreen extends MyScreen {
         timeElapsed = 0;
         random = new Random();
         gameOver = new Texture(Gdx.files.internal("GameOverLabel.png"));
-        s = new Spawner(120, this);
+        s = new Spawner(60, this);
     }
 
     @Override
@@ -124,7 +124,7 @@ public class GameScreen extends MyScreen {
             s.spawn();
             handleBattle(game.getBatch());
             timeElapsed++;
-            if (timeElapsed == 30 * 60 && difficulty - 0.1 >= 0.5) {
+            if (timeElapsed == 30 * 60 && difficulty - 0.1 >= 0.3) {
                 difficulty -= 0.1;
                 player.powerUp();
                 ui.updateHealth(player.getHealth());

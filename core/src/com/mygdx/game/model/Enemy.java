@@ -16,8 +16,8 @@ public class Enemy extends Spaceship {
         player = false;
         preparation = 0;
         determineEnemy(ship);
-        movementY = -(screen.getRandom().nextInt(3) + 1);
-        movementX = screen.getRandom().nextInt(4);
+        movementY = -(screen.getRandom().nextInt(3) );
+        movementX = screen.getRandom().nextInt(6)+1;
         if (screen.getRandom().nextBoolean())
             movementX *= -1;
         setType(ship);
@@ -34,14 +34,14 @@ public class Enemy extends Spaceship {
                 health = 80;
                 cooldown =(int) (300*screen.getDifficulty());
                 damage = 10;
-                points = 100;
+                points = 200;
                 break;
             case ENEMY2:
                 setWeapon(Weapon.getDefaultSingle());
                 health = 100;
                 cooldown = (int) (300*screen.getDifficulty());
                 damage = 15;
-                points = 200;
+                points = 100;
                 break;
             case ENEMY3:
                 setWeapon(new Weapon(600, Weapon.MINIGUN));
@@ -49,7 +49,7 @@ public class Enemy extends Spaceship {
                 cooldown = (int) (200*screen.getDifficulty());
                 damage = 5;
                 movementY--;
-                movementX*=3;
+                movementX*=3f;
                 points = 150;
                 break;
             case ENEMY4:
@@ -58,13 +58,13 @@ public class Enemy extends Spaceship {
                 cooldown = (int) (400*screen.getDifficulty());
                 damage = 30;
                 points = 500;
+                movementX/=3f;
+                movementY/=3f;
                 break;
 
         }
         movementX/=screen.getDifficulty();
         movementY/=screen.getDifficulty();
-
-
     }
 
     @Override
