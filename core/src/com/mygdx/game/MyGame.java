@@ -53,12 +53,10 @@ public class MyGame extends Game {
         fontSkin = new Skin(Gdx.files.internal("skin.json"));
         assets = new Assets();
         batch = new SpriteBatch();
-        gameScreen = new GameScreen(this, Difficulties.VERY_HARD, Spaceship.Ships.PLAYER_RED);
         m = new CharacterManager();
         m.setShips(assets.getManager().get("AllShips.atlas", TextureAtlas.class));
         m.setProjectiles(assets.getManager().get("Lights.atlas", TextureAtlas.class));
         labels = assets.getManager().get("AllLabels.atlas", TextureAtlas.class);
-        ((GameScreen) gameScreen).initialize();
         menuScreen = new MenuScreen(this);
         pauseScreen = new PauseScreen(this);
         setScreen(menuScreen);

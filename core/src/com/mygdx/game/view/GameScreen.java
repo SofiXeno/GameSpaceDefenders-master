@@ -2,6 +2,7 @@ package com.mygdx.game.view;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.mygdx.game.MyGame;
@@ -30,7 +31,7 @@ public class GameScreen extends MyScreen {
     private Spawner s;
     private boolean gameover;
     private Spaceship.Ships playerSkin;
-
+    private Music music;
     public GameScreen(MyGame game, MyGame.Difficulties diff, Spaceship.Ships ship) {
         super(game);
         playerSkin = ship;
@@ -51,6 +52,11 @@ public class GameScreen extends MyScreen {
                 difficulty = 0.6f;
                 break;
         }
+            music = Gdx.audio.newMusic(Gdx.files.internal("game.mp3"));
+            music.setVolume(0.5f);
+            music.setLooping(true);
+            music.play();
+
     }
 
     public CharacterManager getCharManager() {
@@ -115,6 +121,7 @@ public class GameScreen extends MyScreen {
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
+                    music.stop();
                     game.newMenu();
                 }
                 return;
